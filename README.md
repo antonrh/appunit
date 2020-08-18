@@ -16,6 +16,8 @@ AppUnit is Python 3.6+ Framework, built on top of famous python libraries:
 * [injector](https://github.com/alecthomas/injector) - Dependency injection framework
 * [pydantic](https://github.com/samuelcolvin/pydantic/) - Data validation and settings management
 
+---
+
 Documentation: https://appunit.readthedocs.io/
 
 ---
