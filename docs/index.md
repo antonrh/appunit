@@ -1,4 +1,4 @@
-# AppUnit Framework
+# AppUnit Micro-Framework
 
 ![tests](https://github.com/antonrh/appunit/workflows/tests/badge.svg)
 [![codecov](https://codecov.io/gh/antonrh/appunit/branch/master/graph/badge.svg)](https://codecov.io/gh/antonrh/appunit)
@@ -9,7 +9,7 @@
 
 ---
 
-AppUnit is Python 3.6+ Framework, built on top of famous python libraries:
+AppUnit is Python 3.6+ Micro-Framework, built on top of famous libraries:
 
 * [starlette](https://github.com/encode/starlette/) - Lightweight ASGI framework/toolkit
 * [click](https://github.com/pallets/click) - Command line interface toolkit
@@ -21,6 +21,12 @@ AppUnit is Python 3.6+ Framework, built on top of famous python libraries:
 ## Installing
 
 Install using `pip`:
+
+```bash
+pip install appunit
+```
+
+To run application with [Uvicorn](https://github.com/encode/uvicorn) server use:
 
 ```bash
 pip install appunit[full]
@@ -43,4 +49,13 @@ def index():
 
 if __name__ == "__main__":
     app.run()
+```
+
+Output:
+
+```
+INFO: Started server process [35049]
+INFO: Waiting for application startup.
+INFO: Application startup complete.
+INFO: Uvicorn running on http://localhost:8000 (Press CTRL+C to quit)
 ```
