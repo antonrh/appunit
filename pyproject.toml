@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "appunit"
+version = "0.1.0-dev0"
+description = ""
+authors = ["Anton Ruhlov <antonruhlov@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+starlette = "^0.13.8"
+
+[tool.poetry.dev-dependencies]
+isort = "^5.4.2"
+mypy = "^0.782"
+black = "^19.10b0"
+flake8 = "^3.8.3"
+bump2version = "^1.0.0"
+safety = "^1.9.0"
+pytest = "^6.0.1"
+pytest-cov = "^2.10.1"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

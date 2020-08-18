@@ -1,0 +1,63 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip setuptools poetry
+          poetry config virtualenvs.create false
+          poetry install -n
+      - name: Imports sorting
+        run: isort --check appunit tests
+      - name: Code formatting
+        run: black --check appunit tests
+      - name: Code style
+        run: flake8 appunit tests
+      - name: Static type checking
+        run: mypy appunit tests
+      - name: Dependencies safety
+        run: safety check --full-report
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version:
+          - 3.6
+          - 3.7
+          - 3.8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip setuptools poetry
+          poetry config virtualenvs.create false
+          poetry install -n
+      - name: Run tests
+        run: pytest -vv --cov=appunit --cov-report=xml
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          name: python-${{ matrix.python-version }}
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
