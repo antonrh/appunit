@@ -1,6 +1,4 @@
-# AppUnit
-
-Python application library.
+# AppUnit Framework
 
 ![tests](https://github.com/antonrh/appunit/workflows/tests/badge.svg)
 [![codecov](https://codecov.io/gh/antonrh/appunit/branch/master/graph/badge.svg)](https://codecov.io/gh/antonrh/appunit)
@@ -11,7 +9,12 @@ Python application library.
 
 ---
 
-Documentation: https://appunit.readthedocs.io/
+AppUnit is Python 3.6+ Framework, built on top of famous python libraries:
+
+* [starlette](https://github.com/encode/starlette/) - Lightweight ASGI framework/toolkit
+* [click](https://github.com/pallets/click) - Command line interface toolkit
+* [injector](https://github.com/alecthomas/injector) - Dependency injection framework
+* [pydantic](https://github.com/samuelcolvin/pydantic/) - Data validation and settings management
 
 ---
 
@@ -20,5 +23,24 @@ Documentation: https://appunit.readthedocs.io/
 Install using `pip`:
 
 ```bash
-pip install appunit
+pip install appunit[full]
+```
+
+## Quick Example
+
+*app.py*
+
+```python
+import appunit
+
+app = appunit.AppUnit()
+
+
+@app.get("/")
+def index():
+    return "Hello, AppUnit!"
+
+
+if __name__ == "__main__":
+    app.run()
 ```
