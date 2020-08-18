@@ -62,7 +62,7 @@ class AppUnit(RouterMixin):
         self.injector = Injector(auto_bind=auto_bind)
         self.router = Router()
         self.exception_handlers = {
-            exc_type: handler
+            exc_type: self._inject_exception_handler(handler)
             for exc_type, handler in (
                 {} if exception_handlers is None else dict(exception_handlers)
             ).items()
