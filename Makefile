@@ -14,3 +14,6 @@ lint: ## Run code linters
 fmt format: ## Run code formatters
 	isort appunit tests
 	black appunit tests
+
+requirements:  ## Make requirements
+	poetry export -f requirements.txt -E docs > requirements.docs.txt
