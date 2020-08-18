@@ -1,10 +1,10 @@
 import abc
-from dataclasses import dataclass, field
 from typing import Callable, List, Optional
 
+from pydantic import BaseModel, Field
 
-@dataclass
-class Route:
+
+class Route(BaseModel):
     path: str
     route: Callable
     methods: Optional[List[str]] = None
@@ -70,10 +70,9 @@ class RouterMixin:
         return self.route(path, methods=["TRACE"], name=name, **params)
 
 
-@dataclass
-class Router(RouterMixin):
+class Router(RouterMixin, BaseModel):
     prefix: Optional[str] = None
-    routes: List[Route] = field(default_factory=list)
+    routes: List[Route] = Field(default_factory=list)
 
     def add_route(
         self,
