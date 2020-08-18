@@ -10,7 +10,7 @@ from injector import (
     singleton,
 )
 
-from appunit import ctx
+from appunit import context
 
 __all__ = [
     "Injector",
@@ -43,12 +43,12 @@ class CachedProviderWrapper(Provider):
 
 class RequestScope(Scope):
     def get(self, key: Type[T], old_provider: Provider[T]) -> Provider[T]:
-        scope: dict = ctx.get_request_scope()
+        scope: dict = context.get_request_scope()
         try:
             return scope[key]
         except KeyError:
             new_provider = scope[key] = CachedProviderWrapper(old_provider)
-            ctx.set_request_scope(scope)
+            context.set_request_scope(scope)
             return new_provider
 
 

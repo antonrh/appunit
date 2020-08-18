@@ -1,6 +1,6 @@
 from contextvars import ContextVar, Token
 
-from appunit.request import Request
+from starlette.requests import Request
 
 _request_scope: ContextVar[dict] = ContextVar("request_scope")
 

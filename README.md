@@ -1,6 +1,6 @@
 # AppUnit
 
-Python application library.
+Python Application Framework.
 
 ![tests](https://github.com/antonrh/appunit/workflows/tests/badge.svg)
 [![codecov](https://codecov.io/gh/antonrh/appunit/branch/master/graph/badge.svg)](https://codecov.io/gh/antonrh/appunit)
@@ -20,5 +20,24 @@ Documentation: https://appunit.readthedocs.io/
 Install using `pip`:
 
 ```bash
-pip install appunit
+pip install appunit[full]
+```
+
+## Quick Example
+
+*app.py*
+
+```python
+import appunit
+
+app = appunit.AppUnit()
+
+
+@app.get("/")
+def index():
+    return "Hello, AppUnit !"
+
+
+if __name__ == "__main__":
+    app.run()
 ```

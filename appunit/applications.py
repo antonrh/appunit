@@ -29,10 +29,18 @@ from starlette.middleware import Middleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.errors import ServerErrorMiddleware
 from starlette.requests import Request
+from starlette.responses import JSONResponse, Response
 from starlette.routing import Router
 from starlette.types import ASGIApp, Receive, Scope as ASGIScope, Send
 
-from appunit import ctx
+from appunit.routing import RouterMixin
+
+try:
+    import uvicorn
+except ImportError:
+    uvicorn = None
+
+from appunit import context
 from appunit.middleware import RequestScopeMiddleware
 
 Interface = TypeVar("Interface")
@@ -40,12 +48,13 @@ ScopeType = Union[Type[Scope], ScopeDecorator]
 ModuleType = Union[Type["Module"], "Module"]
 
 
-class AppUnit:
+class AppUnit(RouterMixin):
     def __init__(
         self,
         debug: bool = False,
         exception_handlers: Dict[Union[int, Type[Exception]], Callable] = None,
         middleware: Sequence[Union[Middleware, Callable]] = None,
+        response_class: Optional[Type[Response]] = None,
         modules: Optional[List[ModuleType]] = None,
         auto_bind: bool = False,
     ):
@@ -66,10 +75,11 @@ class AppUnit:
         self.user_middleware.insert(0, Middleware(RequestScopeMiddleware))
         self.middleware_stack = self.build_middleware_stack()
         self.cli = click.Group()
+        self.response_class = response_class or JSONResponse
 
         self.injector.binder.bind(AppUnit, to=self, scope=SingletonScope)
         self.injector.binder.bind(Injector, to=self.injector, scope=SingletonScope)
-        self.injector.binder.bind(Request, to=ctx.get_current_request)
+        self.injector.binder.bind(Request, to=context.get_current_request)
 
         modules = modules or []
         for module in modules:
@@ -152,26 +162,6 @@ class AppUnit:
             include_in_schema=include_in_schema,
         )
 
-    def route(
-        self,
-        path: str,
-        *,
-        methods: List[str] = None,
-        name: str = None,
-        include_in_schema: bool = True,
-    ) -> Callable:
-        def decorator(route: Callable) -> Callable:
-            self.add_route(
-                path,
-                route=route,
-                methods=methods,
-                name=name,
-                include_in_schema=include_in_schema,
-            )
-            return route
-
-        return decorator
-
     def add_exception_handler(
         self, status_or_exc: Union[int, Type[Exception]], *, handler: Callable
     ) -> None:
@@ -253,8 +243,20 @@ class AppUnit:
 
         return decorator
 
-    def main(self):
-        self.cli.main()
+    def run(self, **kwargs) -> None:
+        """
+        Run Uvicorn server.
+        """
+        if uvicorn is None:
+            raise RuntimeError("`uvicorn` is not installed.")
+
+        uvicorn.run(app=self, **kwargs)
+
+    def main(self) -> int:
+        """
+        Start application CLI.
+        """
+        return self.cli.main()
 
     ############################################
     # Dependency Injection helpers
@@ -264,9 +266,9 @@ class AppUnit:
         def wrapper(func: Callable) -> Callable:
             @functools.wraps(func)
             async def wrapped():
-                ret = self.injector.call_with_injection(inject(func))
-                if inspect.iscoroutine(ret):
-                    return await ret
+                handler = self.injector.call_with_injection(inject(func))
+                if inspect.iscoroutine(handler):
+                    return await handler
 
             return wrapped
 
@@ -276,7 +278,13 @@ class AppUnit:
         def wrapper(func: Callable) -> Callable:
             @functools.wraps(func)
             async def wrapped(_: Request):
-                return await self.injector.call_with_injection(inject(func))
+                response = self.injector.call_with_injection(inject(func))
+                if inspect.iscoroutine(response):
+                    response = await response
+
+                if isinstance(response, Response):
+                    return response
+                return self.response_class(content=response)
 
             return wrapped
 

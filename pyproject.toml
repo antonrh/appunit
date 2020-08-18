@@ -12,6 +12,7 @@ click = "^7.1.2"
 injector = "^0.18.3"
 mkdocs = {version = "^1.1.2", extras = ["docs"]}
 mkdocs-material = {version = "^5.5.7", extras = ["docs"]}
+uvicorn = {version = "^0.11.8", extras = ["full"]}
 
 [tool.poetry.dev-dependencies]
 isort = "^5.4.2"
