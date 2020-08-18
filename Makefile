@@ -9,7 +9,7 @@ lint: ## Run code linters
 	black --check appunit tests
 	flake8 appunit tests
 	mypy appunit tests
-	safety check --full-report
+	safety check --full-report -i 38624 -i 38625
 
 fmt format: ## Run code formatters
 	isort appunit tests
