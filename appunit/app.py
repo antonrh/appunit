@@ -45,7 +45,7 @@ class AppUnit:
         self,
         debug: bool = False,
         exception_handlers: Dict[Union[int, Type[Exception]], Callable] = None,
-        middleware: Sequence[Callable] = None,
+        middleware: Sequence[Union[Middleware, Callable]] = None,
         modules: Optional[List[ModuleType]] = None,
         auto_bind: bool = False,
     ):
