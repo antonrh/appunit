@@ -10,10 +10,11 @@ python = "^3.6"
 starlette = "^0.13.8"
 click = "^7.1.2"
 injector = "^0.18.3"
+pydantic = "^1.6.1"
 mkdocs = {version = "^1.1.2", extras = ["docs"]}
 mkdocs-material = {version = "^5.5.7", extras = ["docs"]}
+mkautodoc = {version = "^0.1.0", extras = ["docs"]}
 uvicorn = {version = "^0.11.8", extras = ["full"]}
-pydantic = "^1.6.1"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.4.2"

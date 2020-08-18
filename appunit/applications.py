@@ -18,7 +18,7 @@ import click
 from injector import (
     Binder,
     Injector,
-    Module as _Module,
+    Module as InjectorModule,
     Scope,
     ScopeDecorator,
     SingletonScope,
@@ -43,12 +43,34 @@ except ImportError:
 from appunit import context
 from appunit.middleware import RequestScopeMiddleware
 
-Interface = TypeVar("Interface")
+InterfaceType = TypeVar("InterfaceType")
 ScopeType = Union[Type[Scope], ScopeDecorator]
-ModuleType = Union[Type["Module"], "Module"]
+ModuleType = Union[Callable[[Binder], None], InjectorModule, Type[InjectorModule]]
 
 
 class AppUnit(RouterMixin):
+    """
+    Creates an application instance.
+
+    **Parameters:**
+
+    * **debug** - Boolean indicating if debug tracebacks should be returned on errors.
+    * **exception_handlers** - A dictionary mapping either integer status codes,
+    or exception class types onto callables which handle the exceptions.
+    Exception handler callables should be of the form `handler(request, exc) -> response`
+    and may be be either standard functions, or async functions.
+    * **middleware** - A list of middleware (Middleware class or function) to run for every request.
+    A AppUnit application same as Starlette will always automatically include two middleware classes.
+    `ServerErrorMiddleware` is added as the very outermost middleware, to handle
+    any uncaught errors occurring anywhere in the entire stack.
+    `ExceptionMiddleware` is added as the very innermost middleware, to deal
+    with handled exception cases occurring in the routing or endpoints.
+    * **response_class** - Default response class used in routes.
+    Default is `JSONResponse.`
+    * **modules** - A list of configuration modules.
+    * **auto_bind** - Whether to automatically bind missing types.
+    """
+
     def __init__(
         self,
         debug: bool = False,
@@ -98,24 +120,26 @@ class AppUnit(RouterMixin):
         self._debug = value
         self.middleware_stack = self.build_middleware_stack()
 
-    def add_module(self, module: Union[Type["Module"], "Module"]) -> None:
+    def add_module(self, module: ModuleType) -> None:
         self.injector.binder.install(module)
 
     def lookup(
-        self, interface: Type[Interface], *, scope: Optional[ScopeType] = None
-    ) -> Interface:
+        self, interface: Type[InterfaceType], *, scope: Optional[ScopeType] = None
+    ) -> InterfaceType:
         return self.injector.get(interface, scope=scope)
 
     def bind(
         self,
-        interface: Type[Interface],
+        interface: Type[InterfaceType],
         to: Optional[Any] = None,
         *,
         scope: Optional[ScopeType] = None,
     ) -> None:
         self.injector.binder.bind(interface, to=to, scope=scope)
 
-    def singleton(self, interface: Type[Interface], to: Optional[Any] = None) -> None:
+    def singleton(
+        self, interface: Type[InterfaceType], to: Optional[Any] = None
+    ) -> None:
         self.injector.binder.bind(interface, to=to, scope=SingletonScope)
 
     def add_startup_event(self, event: Callable) -> None:
@@ -355,7 +379,7 @@ class AppUnit(RouterMixin):
         return wrapper(cmd)
 
 
-class Module(_Module):
+class Module(InjectorModule):
     def __init__(self):
         self._app: Optional[AppUnit] = None
 
