@@ -1,0 +1,23 @@
+site_name: AppUnit
+site_description: Python Application library
+site_author: Anton Ruhlov
+site_url: https://github.com/antonrh/appunit
+
+theme:
+  name: material
+  palette:
+    scheme: default
+
+plugins:
+  - search
+
+repo_name: antonrh/appunit
+repo_url: https://github.com/antonrh/appunit
+edit_uri: ""
+
+nav:
+  - Introduction: index.md
+
+markdown_extensions:
+  - markdown.extensions.codehilite:
+      guess_lang: false
