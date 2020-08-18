@@ -8,6 +8,8 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.6"
 starlette = "^0.13.8"
+click = "^7.1.2"
+injector = "^0.18.3"
 mkdocs = {version = "^1.1.2", extras = ["docs"]}
 mkdocs-material = {version = "^5.5.7", extras = ["docs"]}
 
