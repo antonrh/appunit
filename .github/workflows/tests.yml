@@ -32,7 +32,7 @@ jobs:
       - name: Static type checking
         run: mypy appunit tests
       - name: Dependencies safety
-        run: safety check --full-report
+        run: safety check --full-report -i 38624 -i 38625
   tests:
     runs-on: ubuntu-latest
     strategy:
