@@ -243,20 +243,33 @@ class AppUnit(RouterMixin):
 
         return decorator
 
-    def run(self, **kwargs) -> None:
+    def run(self, host: str = "localhost", port: int = 8000, **kwargs) -> None:
         """
         Run Uvicorn server.
         """
         if uvicorn is None:
             raise RuntimeError("`uvicorn` is not installed.")
 
-        uvicorn.run(app=self, **kwargs)
+        uvicorn.run(app=self, host=host, port=port, **kwargs)
 
-    def main(self) -> int:
+    def main(
+        self,
+        args: Optional[List[str]] = None,
+        prog_name: Optional[str] = None,
+        complete_var: Optional[str] = None,
+        standalone_mode: bool = True,
+        **extra,
+    ) -> int:
         """
         Start application CLI.
         """
-        return self.cli.main()
+        return self.cli.main(
+            args=args,
+            prog_name=prog_name,
+            complete_var=complete_var,
+            standalone_mode=standalone_mode,
+            **extra,
+        )
 
     ############################################
     # Dependency Injection helpers
