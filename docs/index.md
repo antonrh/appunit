@@ -37,9 +37,9 @@ pip install appunit[full]
 *app.py*
 
 ```python
-import appunit
+from appunit.applications import AppUnit
 
-app = appunit.AppUnit()
+app = AppUnit()
 
 
 @app.get("/")

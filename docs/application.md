@@ -2,8 +2,9 @@ AppUnit includes an application class `AppUnit` which is base class of `ASGI` or
 
 ```python
 from starlette.middleware.base import RequestResponseEndpoint
+from starlette.requests import Request
 
-from appunit import AppUnit, Request
+from appunit.applications import AppUnit
 
 app = AppUnit(debug=True)
 

@@ -7,7 +7,7 @@ outside of a class and provides those objects to a class through different way u
 You can set and get application dependencies using `bind` and `lookup` methods.
 
 ```python
-from appunit import AppUnit
+from appunit.applications import AppUnit
 
 app = AppUnit()
 app.bind(str, to="Hello DI!")
@@ -28,7 +28,7 @@ You can also provide different scopes to your dependencies.
 #### No Scope
 
 ```python
-from appunit import AppUnit
+from appunit.applications import AppUnit
 
 app = AppUnit()
 app.bind(str, to="Hello DI!")
@@ -43,7 +43,9 @@ of that binding, and all requests for that binding interface will return the sam
 which is cached.
 
 ```python
-from appunit import AppUnit, SingletonScope
+from injector import SingletonScope
+
+from appunit.applications import AppUnit
 
 
 class Component:
@@ -63,7 +65,11 @@ Defining binding with request scope means the container creates a single instanc
 of that binding for every request which is cached.
 
 ```python
-from appunit import AppUnit, Request, RequestScope, inject
+from injector import inject
+from starlette.requests import Request
+
+from appunit.applications import AppUnit
+from appunit.dependencies import RequestScope
 
 
 class Path(str):

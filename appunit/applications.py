@@ -18,7 +18,7 @@ import click
 from injector import (
     Binder,
     Injector,
-    Module as InjectorModule,
+    Module,
     Scope,
     ScopeDecorator,
     SingletonScope,
@@ -45,7 +45,7 @@ from appunit.middleware import RequestScopeMiddleware
 
 InterfaceType = TypeVar("InterfaceType")
 ScopeType = Union[Type[Scope], ScopeDecorator]
-ModuleType = Union[Callable[[Binder], None], InjectorModule, Type[InjectorModule]]
+ModuleType = Union[Callable[[Binder], None], Module, Type[Module]]
 
 
 class AppUnit(RouterMixin):
@@ -370,20 +370,3 @@ class AppUnit(RouterMixin):
             return wrapped
 
         return wrapper(cmd)
-
-
-class Module(InjectorModule):
-    def __init__(self):
-        self._app: Optional[AppUnit] = None
-
-    @property
-    def app(self) -> AppUnit:
-        if not self._app:
-            raise RuntimeError(f"{self.__class__.__name__} is not configured.")
-        return self._app
-
-    def configure(self, binder: Binder) -> None:
-        self._app = binder.injector.get(AppUnit)
-
-    def register(self) -> None:
-        pass  # pragma: no cover
