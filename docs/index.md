@@ -11,10 +11,10 @@
 
 AppUnit is Python 3.6+ Micro-Framework, built on top of famous libraries:
 
-* [starlette](https://github.com/encode/starlette/) - Lightweight ASGI framework/toolkit
-* [click](https://github.com/pallets/click) - Command line interface toolkit
-* [injector](https://github.com/alecthomas/injector) - Dependency injection framework
-* [pydantic](https://github.com/samuelcolvin/pydantic/) - Data validation and settings management
+* [Starlette](https://github.com/encode/starlette/) - Lightweight ASGI framework/toolkit
+* [Click](https://github.com/pallets/click) - Command line interface toolkit
+* [Injector](https://github.com/alecthomas/injector) - Dependency injection framework
+* [Pydantic](https://github.com/samuelcolvin/pydantic/) - Data validation and settings management
 
 ---
 

@@ -6,6 +6,7 @@ from injector import (
     Scope,
     ScopeDecorator,
     SingletonScope,
+    ThreadLocalScope,
     inject,
     singleton,
 )
@@ -19,6 +20,7 @@ __all__ = [
     "Scope",
     "ScopeDecorator",
     "SingletonScope",
+    "ThreadLocalScope",
     "inject",
     "request",
     "singleton",

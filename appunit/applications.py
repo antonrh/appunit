@@ -57,14 +57,7 @@ class AppUnit(RouterMixin):
     * **debug** - Boolean indicating if debug tracebacks should be returned on errors.
     * **exception_handlers** - A dictionary mapping either integer status codes,
     or exception class types onto callables which handle the exceptions.
-    Exception handler callables should be of the form `handler(request, exc) -> response`
-    and may be be either standard functions, or async functions.
     * **middleware** - A list of middleware (Middleware class or function) to run for every request.
-    A AppUnit application same as Starlette will always automatically include two middleware classes.
-    `ServerErrorMiddleware` is added as the very outermost middleware, to handle
-    any uncaught errors occurring anywhere in the entire stack.
-    `ExceptionMiddleware` is added as the very innermost middleware, to deal
-    with handled exception cases occurring in the routing or endpoints.
     * **response_class** - Default response class used in routes.
     Default is `JSONResponse.`
     * **modules** - A list of configuration modules.
